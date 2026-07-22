@@ -1,0 +1,66 @@
+name: Build & deploy Career Headlines
+
+# Runs the digest and publishes the result to GitHub Pages.
+#
+# Triggers:
+#   * workflow_dispatch — run it manually from the Actions tab
+#   * schedule          — every weekday morning (06:00 UTC ≈ 07:00 BST / 06:00 GMT)
+#   * push              — rebuild whenever the code changes on this branch
+#
+# Before the first Pages deploy, do two one-time things in the repo settings:
+#   1. Settings → Secrets and variables → Actions → add ANTHROPIC_API_KEY
+#      (without it the page still builds, using feed descriptions instead of
+#       Claude summaries — so you can verify Pages works first, then add the key).
+#   2. Settings → Pages → Build and deployment → Source: "GitHub Actions".
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1-5"
+  push:
+    branches:
+      - main
+      - claude/career-headlines-scoping-3e219c
+
+# Permissions the deploy-pages action needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deployment at a time.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Build the digest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m career_headlines --output docs/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

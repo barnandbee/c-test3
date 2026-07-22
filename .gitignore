@@ -1,0 +1,14 @@
+# Secrets — never commit your API key
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Build output — the CI workflow regenerates and deploys this on every run.
+# (Comment this out if you'd rather commit the generated page, e.g. to serve
+#  Pages from the `docs/` folder on your default branch instead of via Actions.)
+docs/
