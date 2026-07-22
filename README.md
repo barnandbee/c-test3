@@ -1,13 +1,20 @@
 # Career Headlines
 
-A personal daily digest of careers & employability news. It pulls headlines
-from a defined set of UK, Australian and international sources, filters and
-de-duplicates them, summarises each in one line via the Claude API, and
-renders a clean static web page you can skim as part of your morning routine.
+A personal daily digest covering **careers, employment, skills and the future
+of work**. It pulls headlines from a defined set of UK, Australian and
+international sources, filters and de-duplicates them, summarises each in one
+line via the Claude API, and renders a clean static web page — grouped into
+thematic sections with filter chips — that you can skim as part of your morning
+routine.
 
 Built to be **read**, not just run — the pipeline is split into small,
 single-purpose modules so you can follow (and learn from) exactly what happens
 at each step.
+
+The page is organised into sections (Careers & Guidance · Employment & Labour
+Market · Skills, VET & Apprenticeships · Higher & Further Education · Future of
+Work · Policy & International), with filter chips to focus on one at a time and
+an "AI" badge on AI-related stories, since that theme cuts across all of them.
 
 ---
 

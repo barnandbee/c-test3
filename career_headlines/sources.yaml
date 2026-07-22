@@ -4,45 +4,71 @@
 # This is the one file you edit day-to-day. Add/remove a `sources` entry to
 # change what gets pulled; tweak `settings` and `keywords` to re-tune.
 #
-# Feed URLs are best-effort. A source whose feed is unreachable or has no
-# valid RSS is skipped with a warning (the run still succeeds), so you can
-# safely correct URLs over time. Run `python -m career_headlines --check-sources`
-# to see which feeds currently resolve.
+# `category` is the thematic SECTION a source appears under on the page (and
+# the label on its filter chip). Group sources by theme, not by country.
+#
+# Feed URLs are best-effort. A source whose feed is unreachable or has no valid
+# RSS is skipped with a warning (the run still succeeds), so you can correct
+# URLs over time. Run `python -m career_headlines --check-sources` on a machine
+# with open network access to see which feeds currently resolve.
+#
+# Note: a few big sites (World Economic Forum, OECD) sit behind Cloudflare bot
+# protection and often refuse automated feed requests regardless of URL. They
+# are kept as best-effort; the Future of Work section is well covered by the
+# other sources if they don't come through.
 # =============================================================================
 
 settings:
   recency_hours: 48        # soft window: only include items newer than this
-  max_items: 40            # hard cap on stories per run (controls API cost)
+  max_items: 60            # hard cap on stories per run (controls API cost)
   model: claude-haiku-4-5  # efficient, cheap model for one-line summaries
   summary_batch_size: 10   # articles summarised per Claude API call
   timezone: Europe/London
   site_title: Career Headlines
 
 keywords:
-  # An item is kept only if its title/summary contains one of these topics.
+  # An item is kept only if its title/summary mentions one of these. The list
+  # is deliberately broad — careers, employment, skills and the future of work.
   topics:
     - career
     - careers
     - employability
     - employment
-    - graduate
-    - apprenticeship
-    - apprentice
-    - skills
-    - vocational
-    - vet
-    - higher education
-    - further education
-    - guidance
+    - employer
+    - hiring
+    - recruit
+    - recruitment
+    - talent
+    - workforce
     - labour market
     - labor market
-    - workforce
+    - job
     - jobs
-    - future of work
+    - vacancy
+    - vacancies
+    - skill
+    - skills
     - reskilling
     - upskilling
+    - training
+    - apprentice
+    - apprenticeship
+    - vocational
+    - vet
+    - technical education
+    - graduate
+    - guidance
     - work experience
-  # Items matching these are flagged with an "AI" badge on the page.
+    - future of work
+    - world of work
+    - automation
+    - productivity
+    - wages
+    - economic inactivity
+    - neet
+    - further education
+    - higher education
+  # Items matching these get an "AI" badge (AI cuts across every section).
   ai:
     - artificial intelligence
     - " ai "
@@ -53,109 +79,113 @@ keywords:
     - automation
     - chatgpt
     - large language model
+    - agentic
 
 sources:
-  # --- UK careers & employability sector ---------------------------------
+  # === Careers & Guidance ================================================
   - name: Career Development Institute (CDI)
-    category: Careers & Employability
+    category: Careers & Guidance
     feed: https://www.thecdi.net/News/rss
     homepage: https://www.thecdi.net/
-
   - name: AGCAS
-    category: Careers & Employability
+    category: Careers & Guidance
     feed: https://www.agcas.org.uk/News/rss
     homepage: https://www.agcas.org.uk/
-
   - name: Institute of Student Employers (ISE)
-    category: Careers & Employability
+    category: Careers & Guidance
     feed: https://ise.org.uk/feed/
     homepage: https://ise.org.uk/
-
   - name: Careers & Enterprise Company
-    category: Careers & Employability
+    category: Careers & Guidance
     feed: https://www.careersandenterprise.co.uk/news/rss/
     homepage: https://www.careersandenterprise.co.uk/
-
-  # --- UK higher / further education / VET -------------------------------
-  - name: WonkHE
-    category: Higher / Further Education
-    feed: https://wonkhe.com/feed/
-    homepage: https://wonkhe.com/
-
-  - name: HEPI
-    category: Higher / Further Education
-    feed: https://www.hepi.ac.uk/feed/
-    homepage: https://www.hepi.ac.uk/
-
-  - name: FE News
-    category: Higher / Further Education
-    feed: https://www.fenews.co.uk/feed/
-    homepage: https://www.fenews.co.uk/
-
-  - name: FE Week
-    category: Higher / Further Education
-    feed: https://feweek.co.uk/feed/
-    homepage: https://feweek.co.uk/
-
-  - name: gov.uk — Department for Education
-    category: Policy (UK Government)
-    feed: https://www.gov.uk/search/news-and-communications.atom?organisations%5B%5D=department-for-education
-    homepage: https://www.gov.uk/government/organisations/department-for-education
-
-  - name: gov.uk — Dept for Work and Pensions
-    category: Policy (UK Government)
-    feed: https://www.gov.uk/search/news-and-communications.atom?organisations%5B%5D=department-for-work-pensions
-    homepage: https://www.gov.uk/government/organisations/department-for-work-pensions
-
-  # --- Labour market & world of work -------------------------------------
-  - name: Institute for Employment Studies (IES)
-    category: Labour Market & World of Work
-    feed: https://www.employment-studies.co.uk/news/rss.xml
-    homepage: https://www.employment-studies.co.uk/
-
-  - name: Cedefop
-    category: Labour Market & World of Work
-    feed: https://www.cedefop.europa.eu/en/rss/news.xml
-    homepage: https://www.cedefop.europa.eu/
-
-  - name: Institute for the Future of Work (IFOW)
-    category: Labour Market & World of Work
-    feed: https://www.ifow.org/news?format=rss
-    homepage: https://www.ifow.org/
-
-  # --- Global ------------------------------------------------------------
-  - name: World Economic Forum — Jobs & Skills
-    category: Global
-    feed: https://www.weforum.org/publications/rss.xml
-    homepage: https://www.weforum.org/focus/jobs-and-the-future-of-work/
-
-  # --- Australia ---------------------------------------------------------
-  - name: NCVER
-    category: Australia
-    feed: https://www.ncver.edu.au/rss/news
-    homepage: https://www.ncver.edu.au/
-
-  - name: Jobs and Skills Australia
-    category: Australia
-    feed: https://www.jobsandskills.gov.au/rss.xml
-    homepage: https://www.jobsandskills.gov.au/
-
   - name: Career Industry Council of Australia (CICA)
-    category: Australia
+    category: Careers & Guidance
     feed: https://cica.org.au/feed/
     homepage: https://cica.org.au/
-
   - name: Career Development Association of Australia (CDAA)
-    category: Australia
+    category: Careers & Guidance
     feed: https://www.cdaa.org.au/feed/
     homepage: https://www.cdaa.org.au/
 
+  # === Employment & Labour Market ========================================
+  - name: Institute for Employment Studies (IES)
+    category: Employment & Labour Market
+    feed: https://www.employment-studies.co.uk/news/rss.xml
+    homepage: https://www.employment-studies.co.uk/
+  - name: Resolution Foundation
+    category: Employment & Labour Market
+    feed: https://www.resolutionfoundation.org/feed/
+    homepage: https://www.resolutionfoundation.org/
+  - name: Learning and Work Institute
+    category: Employment & Labour Market
+    feed: https://learningandwork.org.uk/feed/
+    homepage: https://learningandwork.org.uk/
+  - name: Jobs and Skills Australia
+    category: Employment & Labour Market
+    feed: https://www.jobsandskills.gov.au/rss.xml
+    homepage: https://www.jobsandskills.gov.au/
+
+  # === Skills, VET & Apprenticeships =====================================
+  - name: FE News
+    category: Skills, VET & Apprenticeships
+    feed: https://www.fenews.co.uk/feed/
+    homepage: https://www.fenews.co.uk/
+  - name: FE Week
+    category: Skills, VET & Apprenticeships
+    feed: https://feweek.co.uk/feed/
+    homepage: https://feweek.co.uk/
+  - name: Edge Foundation
+    category: Skills, VET & Apprenticeships
+    feed: https://www.edge.co.uk/feed/
+    homepage: https://www.edge.co.uk/
+  - name: NCVER
+    category: Skills, VET & Apprenticeships
+    feed: https://www.ncver.edu.au/rss/news
+    homepage: https://www.ncver.edu.au/
   - name: TAFE Directors Australia
-    category: Australia
+    category: Skills, VET & Apprenticeships
     feed: https://tda.edu.au/feed/
     homepage: https://tda.edu.au/
 
+  # === Higher & Further Education ========================================
+  - name: WonkHE
+    category: Higher & Further Education
+    feed: https://wonkhe.com/feed/
+    homepage: https://wonkhe.com/
+  - name: HEPI
+    category: Higher & Further Education
+    feed: https://www.hepi.ac.uk/feed/
+    homepage: https://www.hepi.ac.uk/
   - name: Campus Morning Mail
-    category: Australia
+    category: Higher & Further Education
     feed: https://campusmorningmail.com.au/feed/
     homepage: https://campusmorningmail.com.au/
+
+  # === Future of Work ====================================================
+  - name: Institute for the Future of Work (IFOW)
+    category: Future of Work
+    feed: https://www.ifow.org/news?format=rss
+    homepage: https://www.ifow.org/
+  - name: Nesta
+    category: Future of Work
+    feed: https://www.nesta.org.uk/feed/
+    homepage: https://www.nesta.org.uk/
+  - name: World Economic Forum (best-effort)
+    category: Future of Work
+    feed: https://www.weforum.org/agenda/feed/
+    homepage: https://www.weforum.org/focus/jobs-and-the-future-of-work/
+
+  # === Policy & International =============================================
+  - name: gov.uk — Department for Education
+    category: Policy & International
+    feed: https://www.gov.uk/search/news-and-communications.atom?organisations%5B%5D=department-for-education
+    homepage: https://www.gov.uk/government/organisations/department-for-education
+  - name: gov.uk — Dept for Work and Pensions
+    category: Policy & International
+    feed: https://www.gov.uk/search/news-and-communications.atom?organisations%5B%5D=department-for-work-pensions
+    homepage: https://www.gov.uk/government/organisations/department-for-work-pensions
+  - name: Cedefop (EU skills)
+    category: Policy & International
+    feed: https://www.cedefop.europa.eu/en/rss/news.xml
+    homepage: https://www.cedefop.europa.eu/

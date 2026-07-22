@@ -20,12 +20,19 @@ from .models import Article
 
 log = logging.getLogger(__name__)
 
-# A polite, real-looking User-Agent — some feeds reject the default one.
+# Present as a real browser. Many feeds (gov sites, Cloudflare-fronted orgs)
+# return 403 to unknown User-Agents, so a realistic UA + Accept headers is the
+# single biggest thing that decides whether a source comes through at all.
 _HEADERS = {
     "User-Agent": (
-        "CareerHeadlines/0.1 (+https://github.com/) "
-        "personal-news-digest"
-    )
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    ),
+    "Accept": (
+        "application/rss+xml, application/atom+xml, application/xml;q=0.9, "
+        "text/html;q=0.8, */*;q=0.7"
+    ),
+    "Accept-Language": "en-GB,en;q=0.9",
 }
 _TIMEOUT = httpx.Timeout(15.0)
 
