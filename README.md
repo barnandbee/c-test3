@@ -105,10 +105,10 @@ Then run it from the **Actions** tab ("Build & deploy Career Headlines" →
 (06:00 UTC — ~07:00 BST / 06:00 GMT, weekday mornings); adjust the cron in the
 workflow if you want a different time.
 
-> Deploying Pages from a non-default branch can be blocked by the `github-pages`
-> environment's protection rules. If the deploy step is rejected, either merge
-> this branch into `main` (the workflow also runs there) or allow this branch in
-> *Settings → Environments → github-pages*.
+> The Pages deploy runs only from `main` (the default branch), which is what the
+> `github-pages` environment's protection rules allow. Develop on a feature
+> branch, then merge to `main` to publish. A manual run dispatched from another
+> branch will build but skip the deploy by design.
 
 ## Project layout
 

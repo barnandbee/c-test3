@@ -5,7 +5,7 @@ name: Build & deploy Career Headlines
 # Triggers:
 #   * workflow_dispatch — run it manually from the Actions tab
 #   * schedule          — every weekday morning (06:00 UTC ≈ 07:00 BST / 06:00 GMT)
-#   * push              — rebuild whenever the code changes on this branch
+#   * push to main      — rebuild & redeploy whenever main changes
 #
 # Before the first Pages deploy, do two one-time things in the repo settings:
 #   1. Settings → Secrets and variables → Actions → add ANTHROPIC_API_KEY
@@ -19,8 +19,7 @@ on:
     - cron: "0 6 * * 1-5"
   push:
     branches:
-      - main
-      - claude/career-headlines-scoping-3e219c
+      - main   # GitHub Pages only allows deploys from the default branch
 
 # Permissions the deploy-pages action needs.
 permissions:
@@ -28,10 +27,11 @@ permissions:
   pages: write
   id-token: write
 
-# Only one Pages deployment at a time.
+# Only one Pages deployment at a time; queue rather than cancel so an
+# in-progress deploy is never interrupted.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -57,6 +57,9 @@ jobs:
 
   deploy:
     needs: build
+    # Belt-and-suspenders: never attempt a Pages deploy from a non-default
+    # branch (e.g. a manual run dispatched from a feature branch).
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
